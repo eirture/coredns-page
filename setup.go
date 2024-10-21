@@ -53,16 +53,13 @@ func pageHandler(pageSize int) func(msg *dns.Msg) *dns.Msg {
 		defer mux.Unlock()
 
 		start := currentPage * pageSize
-		if start > len(msg.Answer) {
+		if start >= len(msg.Answer) {
 			start = 0
 			currentPage = 0
 		}
 		end := min(start+pageSize, len(msg.Answer))
 
 		msg.Answer = msg.Answer[start:end]
-		msg.Ns = msg.Ns[start:end]
-		msg.Extra = msg.Extra[start:end]
-
 		currentPage++
 		return msg
 	}
